@@ -12,10 +12,29 @@ class InverseNumberStream extends Transform {
     }
 }
 
-const server = http.createServer((req, res) => {
-    return req
-        .pipe(new InverseNumberStream())
-        .pipe(res)
+// req => ReadableStream
+// res => WriteableStream
+
+const server = http.createServer(async (req, res) => {
+  const buffers = []
+
+  // async/await
+
+  for await (const chunk of req) {
+    buffers.push(chunk)
+  }
+
+  // { "name": "Diego", "email": diego@rocketseat.com.br } JSON não é viável para ser enviado por streams parciais
+
+  const fullStreamContent = Buffer.concat(buffers).toString()
+
+  console.log(fullStreamContent)
+
+  return res.end(fullStreamContent)
+
+  //return req
+  //  .pipe(new InverseNumberStream())
+  //  .pipe(res)
 })
 
 server.listen(3334)
