@@ -4,11 +4,15 @@ import { buildRoutePath } from './utils/build-route-path.js'
 
 const database = new Database()
 
+// route parameters, request body, query parameters
+
 export const routes = [
     {
         method: 'GET',
         path: buildRoutePath('/users'),
         handler: (req, res) => {
+            console.log(req.query)
+
             const users = database.select('users')
 
             // Early return
